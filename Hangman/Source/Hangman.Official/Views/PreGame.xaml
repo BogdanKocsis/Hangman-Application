@@ -1,0 +1,169 @@
+﻿<Window x:Class="Hangman.Official.Views.PreGame"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vms="clr-namespace:Hangman.Official.ViewModels"
+        xmlns:views="clr-namespace:Hangman.Official.Views"
+        xmlns:enums="clr-namespace:Hangman.Official.Enums"
+        xmlns:local="clr-namespace:Hangman.Official"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800" AllowsTransparency="True" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen"  Background="{x:Null}"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" >
+ 
+    <Window.Resources>
+
+        <vms:SignUpViewModel x:Key="HomeMenuViewModel" />
+
+        <DataTemplate x:Key="HomeViewTemplate" DataType="{x:Type vms:SignUpViewModel}">
+
+            <StackPanel VerticalAlignment="Center" >
+                <!-- Choose the category through acombobox-->
+                <StackPanel Orientation="Horizontal"  Margin="300,10,0,0">
+                    <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" FontSize="14" FontStyle="Oblique" FontWeight="ExtraBold">
+                    Choose the topic of the game
+                    </TextBlock>
+                    <ComboBox   x:Name="CategoryComboBox" Width="250" Loaded="ComboBox_Loaded"  SelectionChanged="CategoryComboBox_SelectionChanged">
+
+                    </ComboBox>
+              
+                </StackPanel>
+                
+                <!-- New Game Button-->
+                <Button  Style="{StaticResource  MaterialDesignRaisedLightButton}"
+                    Width="200" Height="100"
+                    Content="New Game" Margin="0,0,450,50"
+                    Command="{Binding Path=NavigateCommand}" >
+                    <Button.CommandParameter>
+                        <enums:Pages>Hangman</enums:Pages>
+                    </Button.CommandParameter>
+                </Button>
+                
+                <!-- Open Game Button( A game saved by the player who made that)-->
+                <Button Style="{StaticResource  MaterialDesignRaisedLightButton}" Margin="450,0,0,10"
+                    Width="200" Height="100"
+                    Content="Open Game"
+                    Command="{Binding Path=NavigateCommand}" Click="Button_OpenGame">
+                    <Button.CommandParameter>
+                        <enums:Pages>Hangman</enums:Pages>
+                    </Button.CommandParameter>
+                </Button>
+                
+                <!-- Statistics Button-->
+                <Button Style="{StaticResource  MaterialDesignRaisedLightButton}" Margin="0,0,450,30"
+                         Width="200" Height="100"
+                        Content="Statistics"
+                       Click="Statistics_Button_Click">
+                  
+                </Button>
+                <!-- Back Button to SignUp Page-->
+                <Button Style="{StaticResource  MaterialDesignRaisedLightButton}" Margin="450,0,0,40"
+                      Width="200" Height="100"
+                        Content="Back"
+                       Click="GoHome"/>
+
+            </StackPanel>
+            
+        </DataTemplate>
+
+        <DataTemplate x:Key="HangmanViewTemplate" DataType="{x:Type vms:HangmanGameViewModel}">
+            <views:HangmanView />
+        </DataTemplate>
+
+    </Window.Resources>
+    <materialDesign:Card VerticalAlignment="Stretch" UniformCornerRadius="15">
+
+        <Grid DataContext="{StaticResource HomeMenuViewModel}">
+            
+
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!-- Dialog Box Button -->
+            <materialDesign:DialogHost BorderBrush="{DynamicResource MaterialDesignDivider}" Grid.ColumnSpan="2">
+                <materialDesign:DialogHost.DialogContent>
+                    <Grid Width="400" Height="350" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Margin="15">
+                            <materialDesign:PackIcon Kind="GamepadVariant" Foreground="{StaticResource PrimaryHueMidBrush}" Width="35" Height="35"/>
+                            <TextBlock Focusable="False"  x:Name="AboutDialogBox" Foreground="Gray" Width="300" Margin="15 5" TextWrapping="WrapWithOverflow" FontSize="15" >
+
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="15">
+                            <Button Focusable="False" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" Style="{DynamicResource MaterialDesignFlatButton}" Margin="4" VerticalAlignment="Center">
+                                OK
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                </materialDesign:DialogHost.DialogContent>
+                <StackPanel Grid.Row="0"  Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.ColumnSpan="2" >
+                    <!-- About Button-->
+                    <Button HorizontalAlignment="Left"  Height="30" Style="{StaticResource MaterialDesignFlatButton}"  Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}" Click="Show_System_Info" >
+                        <StackPanel Orientation="Horizontal" Height="32" Margin="0,0,0,0">
+                            <materialDesign:PackIcon Kind="AboutCircle" Width="15" Height="15" Margin="0 0 0 0" VerticalAlignment="Center" />
+                            <TextBox Text="About" IsReadOnly="True" VerticalAlignment="Top" Margin="20 0 30 0" />
+                        </StackPanel>
+                    </Button>
+                    <!-- Home Button-->
+                    <Button HorizontalAlignment="Left"  Height="30" Style="{StaticResource MaterialDesignFlatButton}"   Click="GoHome" >
+                        <StackPanel Orientation="Horizontal" Height="32" Margin="0,0,0,0">
+                            <materialDesign:PackIcon Kind="Home" Width="15" Height="15" Margin="0 0 0 0" VerticalAlignment="Center" />
+                            <TextBox Text="Home" IsReadOnly="True" VerticalAlignment="Top" Margin="20 0 30 0" />
+                        </StackPanel>
+                    </Button>
+                    <!-- Back Button to PreGame Page-->
+                    <Button HorizontalAlignment="Left" x:Name="backButton" Height="30" Style="{StaticResource MaterialDesignFlatButton}"  Command="{Binding Path=NavigateCommand}" >
+                        <Button.CommandParameter>
+                            <enums:Pages>SignUp</enums:Pages>
+                        </Button.CommandParameter>
+                        <StackPanel Orientation="Horizontal" Height="32" Margin="0,0,250,0">
+                            <materialDesign:PackIcon Kind="ArrowBack" Width="15" Height="15" Margin="0 0 0 0" VerticalAlignment="Center" />
+                            <TextBox Text="Back" IsReadOnly="True" VerticalAlignment="Top" Margin="20 0 30 0" />
+                        </StackPanel>
+                    </Button>
+                    <!-- Minimize Button-->
+                    <Button x:Name="ButtonMinimize" Focusable="False" Click="ButtonMinimize_Click" HorizontalAlignment="Right" Margin="10" Style="{StaticResource MaterialDesignFlatButton}" Foreground="{StaticResource PrimaryHueLightForegroundBrush}">
+                        <materialDesign:PackIcon Kind="WindowMinimize"/>
+                    </Button>
+                    <!-- Close Button-->
+                    <Button x:Name="ButtonPower" Focusable="False" Click="ButtonClose" HorizontalAlignment="Right" Margin="10" Style="{StaticResource MaterialDesignFlatButton}" Foreground="{StaticResource PrimaryHueLightForegroundBrush}">
+                        <materialDesign:PackIcon Kind="Power"/>
+                    </Button>
+
+                </StackPanel>
+            </materialDesign:DialogHost>
+            
+           
+            <!--Main content border-->
+            <Border  Grid.Row="1">
+
+                <ContentControl Content="{Binding}">
+
+                    <ContentControl.Style>
+                        <Style TargetType="{x:Type ContentControl}">
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentPage}">
+                                    <DataTrigger.Value>
+                                        <enums:Pages>SignUp</enums:Pages>
+                                    </DataTrigger.Value>
+                                    <Setter Property="ContentTemplate" Value="{StaticResource HomeViewTemplate}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CurrentPage}">
+                                    <DataTrigger.Value>
+                                        <enums:Pages>Hangman</enums:Pages>
+                                    </DataTrigger.Value>
+                                    <Setter Property="ContentTemplate" Value="{StaticResource HangmanViewTemplate}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+
+            </Border>
+        </Grid>
+    </materialDesign:Card>
+</Window>

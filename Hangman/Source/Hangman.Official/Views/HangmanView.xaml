@@ -1,0 +1,107 @@
+﻿<UserControl x:Class="Hangman.Official.Views.HangmanView"
+
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:conv="clr-namespace:Hangman.Official.Converters"
+             xmlns:vm="clr-namespace:Hangman.Official.ViewModels"
+             xmlns:y="clr-namespace:Hangman.Official.Models"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="700" 
+             KeyDown="UserControl_KeyDown"
+             Loaded="UserControl_Loaded"
+             Focusable="True">
+
+    <UserControl.Resources>
+
+        <vm:HangmanGameViewModel x:Key="HangmanViewModel"/>
+        
+
+        <conv:CharacterToStringConverter x:Key="CharToString"/>
+
+        <DataTemplate x:Key="LetterButtonTemplate">
+            <Button  Width="30" Height="30" Margin="0,0,10,10"
+                           Content="{Binding Path=Letter, Converter={StaticResource CharToString}}"
+                           Style="{StaticResource LetterButtons}"
+                           Command="{Binding ElementName=LettersPanel, Path=DataContext.GuessLetterCommand}"
+                           CommandParameter="{Binding Path=Letter}"/>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <Grid DataContext="{StaticResource HangmanViewModel}"
+          d:DataContext="{d:DesignData Source=/DesignData/HangmanDesignData.xaml}">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--Top bar-->
+        <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Padding="5"
+                Background="{StaticResource MainBackgroundLigthBrush}">
+
+            <Grid>
+
+                <!--Show the number of levels won-->
+                <Label  Content="{Binding Wins}"  Style="{StaticResource lblDesign}" Margin="0,10,0,0" HorizontalAlignment="Left"/>
+                <!--Show the timer-->
+                <Label  Grid.Row="1" Grid.Column="1" Content="{Binding Timer}" Style="{StaticResource lblDesign}" HorizontalAlignment="Left" Margin="140,10,0,0"/>
+
+                <!--Show the name of player-->
+                <Viewbox   Stretch="Uniform" HorizontalAlignment="Right" >
+                    <TextBlock   HorizontalAlignment="Right" Margin="0,0,20,0" Name="textblockUserName"  FontStyle="Italic" >
+                        <Run Text="{Binding textdata}"/>
+                    </TextBlock>
+                </Viewbox>
+                <!--Show the image of player-->
+                <Image Width="70" x:Name="ProfilePicture" Margin="0,0,0,0" HorizontalAlignment="Right">
+         
+                </Image>
+
+
+            </Grid>
+        </Border>
+
+        <!--Save game button-->
+        <Button Grid.Column="0"  Grid.Row="1" HorizontalAlignment="Left"  Height="30" Style="{StaticResource MaterialDesignFlatButton}"   Click="ButtonSave_Click" >
+            <StackPanel Orientation="Horizontal" Height="32" Margin="0,0,0,0">
+                <materialDesign:PackIcon Kind="ContentSave" Width="15" Height="15"  VerticalAlignment="Center" />
+                <TextBox Text="Save" IsReadOnly="True" VerticalAlignment="Top" Margin="0 0 30 0" />
+            </StackPanel>
+        </Button>
+
+        <!--maskedword-->
+        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Margin="2"
+                   Width="auto" Height="auto" FontSize="32" Padding="2"
+                      Text="{Binding MaskedWord}">
+        </TextBlock>
+
+        <!--Letters-->
+
+        <ItemsControl Grid.Column="1" Grid.Row="2" Margin="100,5,100,5" 
+                      ItemTemplate="{StaticResource LetterButtonTemplate}"
+                      ItemsSource="{Binding LettersCollection}"
+                      x:Name="LettersPanel">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+        <!--The images of hangman-->
+        <Image Grid.Row="3" Grid.Column="1" Source="{Binding ProgressImage}" Height="300" Width="300"></Image>
+
+    </Grid>
+
+</UserControl>
