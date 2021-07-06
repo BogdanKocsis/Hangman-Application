@@ -11,8 +11,6 @@ namespace Hangman.Official.Models
        
         public List<byte[]> SelectedImageSetData { get; set; }
 
-    
-
        
 
         private List<byte[]> GetImagesFromSettings()
